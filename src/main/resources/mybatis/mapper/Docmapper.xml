@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hht.demo.Mapper.Docmapper">
+
+    <select id="selectalluser" parameterType="java.lang.String" resultType="com.hht.demo.Bean.Doc">
+        select * from t_doc where username=#{username}
+    </select>
+
+    <select id="selectdocbyname" parameterType="java.lang.String" resultType="com.hht.demo.Bean.Doc">
+        select * from t_doc where username like concat('%',#{username},'%') and isshare='是'
+    </select>
+
+    <select id="selectallshare" parameterType="java.lang.String" resultType="com.hht.demo.Bean.Doc">
+        select * from t_doc where isshare='是'
+    </select>
+
+    <delete id="deldoc" parameterType="int">
+        delete from t_doc where id=#{id}
+    </delete>
+
+    <insert id="insert" parameterType="com.hht.demo.Bean.Doc">
+        INSERT INTO t_doc(
+        filename,savepath,filesize,catalog,
+        filetype,memo,isshare,username,uploaddate,count
+        ) VALUES (
+        #{filename},#{savepath},#{filesize},#{catalog},#{filetype},
+        #{memo},#{isshare},#{username},#{uploaddate},#{count}
+        )
+    </insert>
+
+    <select id="selectOneFileByFileName" resultType="com.hht.demo.Bean.Doc">
+        SELECT * FROM t_doc WHERE filename=#{filename}
+    </select>
+
+    <update id="updateshare">
+        update t_doc
+        set isshare='是'
+        where id=#{id}
+    </update>
+
+</mapper>

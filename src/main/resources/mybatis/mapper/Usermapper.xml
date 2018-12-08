@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hht.demo.Mapper.Usermapper">
+
+    <!-- 用户注册 -->
+    <insert id="insertUser" parameterType="com.hht.demo.Bean.User">
+        insert into t_user (
+          username,
+          password,
+          memo,
+          tel,
+          email
+        ) value (
+        #{username},
+        #{password},
+        #{memo},
+        #{tel},
+        #{email}
+        )
+    </insert>
+
+    <!-- 修改密码 -->
+    <update id="updateUser" parameterType="com.hht.demo.Bean.User">
+        update t_user
+        set password=#{password}
+        where username=#{username}
+    </update>
+
+    <!-- 查询用户信息 -->
+    <select id="selectUser" resultType="com.hht.demo.Bean.User">
+        select * from t_user
+    </select>
+
+    <!-- 用户登录 -->
+    <select id="selectPass" resultType="String">
+        select password from t_user where username=#{username}
+    </select>
+
+
+</mapper>

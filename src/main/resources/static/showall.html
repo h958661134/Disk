@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网盘</title>
+
+    <link rel="stylesheet" type="text/css" href="css/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="css/demo.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="layui/css/layui.css">
+    <script src="layui/layui.js"></script>
+
+</head>
+<body>
+
+      <!-- 主块儿 -->
+
+
+
+
+      <div class="layui-container bs-center" >
+      <div class="row" style="margin-top:5%;">
+          <form class="layui-form">
+            <div class="layui-col-sm5 layui-form-item" style="width:67%;float:left">
+              <label class="layui-form-label">用户名：</label>
+              <div class="layui-input-block">
+              <input type="text" name="username" class="layui-input">
+              </div>
+            </div>
+            <div class="layui-col-sm2 col-md-2" style="float:left;margin-left: 2%;">
+                <a lay-submit lay-filter="search" id="searchIpt" class="layui-btn layui-btn-normal">搜索</a>
+            </div>
+          </form>
+      </div>
+        <table class="layui-table" id="Table" lay-filter="Table"></table>
+      </div>
+
+      <!-- 主块结束 -->
+      <script type="text/html" id="ipts">
+          <a class="layui-btn layui-btn-xs" lay-event="del">删除</a>
+      </script>
+      <script type="text/html" id="ipts1">
+          <a class="layui-btn layui-btn-xs" lay-event="download">下载</a>
+      </script>
+
+    <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src='js/howler.min.js'></script>
+    <script type="text/javascript" src='js/tween.min_1.js'></script>
+    <script type="text/javascript" src='js/html2canvas.js'></script>
+    <script type="text/javascript" src="js/index.js"></script>
+
+    <script>
+
+ layui.use(['laydate','form','jquery','layer','table'], function(){
+  var laydate = layui.laydate;
+  var form = layui.form
+  var $ = layui.jquery
+  var layer = layui.layer
+  var table = layui.table;
+  //自定义验证规则
+  form.verify({
+    //为账号定义的验证添加规则
+  })
+
+     // 按人名查询
+     form.on('submit(search)', function(data){
+         $.post('/disk/doc/selectbyname',data.field,function (data) {
+             showdata(data)
+         })
+         return false;
+     });
+
+     $.post("/disk/doc/selectshare",function (data) {
+         showdata(data)
+     },"json")
+
+     function showdata(data){
+             table.render({
+                elem: '#Table',
+                cols: [
+                    [ //标题栏
+                        {
+                            field: 'btn',
+                            title: '删除',
+                            width: "15%",
+                            align:"center",
+                            toolbar:"#ipts"
+                        },
+                        {
+                            field: 'btn',
+                            title: '下载',
+                            width: "15%",
+                            align:"center",
+                            toolbar:"#ipts1"
+                        },
+                        {
+                            field: 'id',
+                            title: '文件id',
+                            width: "30%",
+                            align:"center"
+
+                        }, {
+                            field: 'filename',
+                            title: '文件名称',
+                            width: "40%",
+                            align:"center"
+
+                        }, {
+                            field: 'savepath',
+                            title: '存储路径',
+                            width: "60%",
+                            align:"center"
+                        }, {
+                            field: 'filesize',
+                            title: '文件大小',
+                            width: "30%",
+                            align:"center"
+                        }, {
+                            field: 'catalog',
+                            title: '分类',
+                            width: "30%",
+                            align:"center"
+                        },{
+                            field: 'filetype',
+                            title: '文件类型',
+                            width: "30%",
+                            align:"center"
+                        },{
+                            field: 'memo',
+                            title: '文件介绍',
+                            width: "60%",
+                            align:"center"
+                        },{
+                            field: 'isshare',
+                            title: '是否共享',
+                            width: "30%",
+                            align:"center"
+                        },{
+                            field: 'username',
+                            title: '上传者',
+                            width: "30%",
+                            align:"center"
+                        },{
+                            field: 'uploaddate',
+                            title: '上传时间',
+                            width: "30%",
+                            align:"center"
+                        },{
+                            field: 'count',
+                            title: '下载次数',
+                            width: "30%",
+                            align:"center"
+                        }
+                    ]
+                ],
+                page: false,
+                data: data
+                    //,skin: 'line' //表格风格
+                    ,
+            });
+     }
+
+
+     table.on('tool(Table)',function (obj) {
+         var objitem=obj.event
+         if(objitem === 'del'){
+             // alert(typeof (obj.data['id']));
+             $.post("/disk/doc/deldoc", {
+                 id: obj.data['id']
+             }, function (e) {
+                 window.location.reload();
+             });
+         }
+
+         if(objitem === 'download'){
+             $.post("/disk/doc/filename", {
+                 filename: obj.data['filename']
+             }, function () {
+             });
+             $(location).attr('href', '/disk/file/Download2');
+         }
+     })
+
+})
+
+</script>
+
+</body>
+</html>

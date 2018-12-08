@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>REGISTER</title>
+
+    <script src="/disk/js/jquery-3.3.1.js"></script>
+    <link href="/disk/css/bootstrap.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="/disk/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="/disk/css/style.css">
+    <link rel="stylesheet" href="/disk/layui/css/layui.css">
+
+
+
+</head>
+<body>
+    <div class="container">
+        <div class="form row">
+            <div class="form-horizontal col-md-offset-3" id="login_form">
+                <h3 class="form-title">注册</h3>
+                <form class="layui-form">
+                <div class="col-md-9">
+                    <div class="form-group">
+                        <i class="fa fa-user fa-lg"></i>
+                        <input class="form-control required" type="text" placeholder="Username" id="username" name="username" autofocus="autofocus" maxlength="20"/>
+                    </div>
+                    <div class="form-group">
+                            <i class="fa fa-lock fa-lg"></i>
+                            <input class="form-control required" type="password" placeholder="Password" id="password" maxlength="8"/>
+                    </div>
+                    <div class="form-group">
+                            <i class="fa fa-lock fa-lg"></i>
+                            <input class="form-control required" type="password" placeholder="rePassword" id="repassword" name="password" maxlength="8"/>
+                    </div>
+                    <div class="form-group">
+                        <i class="fa fa-commenting fa-lg"></i>
+                        <input class="form-control required" type="text" placeholder="memo" id="memo" name="memo" autofocus="autofocus" maxlength="20"/>
+                    </div>
+                    <div class="form-group">
+                        <i class="fa fa-phone fa-lg"></i>
+                        <input class="form-control required" type="text" placeholder="telephone" id="telephone" name="tel" autofocus="autofocus" maxlength="20"/>
+                    </div>
+                    <div class="form-group">
+                        <i class="fa fa-etsy fa-lg"></i>
+                        <input class="form-control required" type="text" placeholder="E-mail" id="email" name="email" autofocus="autofocus" maxlength="20"/>
+                    </div>
+                    <div class="form-group col-md-offset-9">
+                        <a lay-submit lay-filter="demo1" class="btn btn-primary btn-lg btn-block" type="submit">注册</a>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="/disk/layui/layui.js"></script>
+<script>
+    layui.use(['table', 'layer', 'jquery', 'element', 'laydate', 'form'], function () {
+        var table = layui.table;
+        var layer = layui.layer;
+        var $ = layui.jquery;
+        var element = layui.element;
+        var laydate = layui.laydate;
+        var form = layui.form;
+
+        //监听提交
+        form.on('submit(demo1)', function(data){
+            console.log(data)
+            if ($("#password").val()===$("#repassword").val()) {
+                $.post('/disk/user/insertuser', data.field, function (data) {
+                    if (data) {
+                        alert("注册成功");
+                        $(location).attr('href', 'signin.html');
+                    }
+                    else {
+                        alert("用户名已存在");
+                        $(location).attr('href', 'regist.html');
+                    }
+                })
+                return false;
+            }
+            else{
+                alert("两次密码输入不同")
+                $(location).attr('href', 'regist.html');
+            }
+        });
+
+    })
+</script>
+</html>
